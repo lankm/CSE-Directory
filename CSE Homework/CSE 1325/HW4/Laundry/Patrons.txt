@@ -1,0 +1,4 @@
+Jon Doe,D160,3.75,5
+Jane Doe,D450,5.00,3
+Landon Moon,D100,2.00,2
+Billy Bob,D420,6.90,42

@@ -1,0 +1,13 @@
+typedef struct Star
+{ 
+    char *name;      /* system name-star name */
+
+    char class;             /* stellar class */
+    float distance;         /* in light-years */
+    float mass;             /* in solar masses */
+    float abs_magnitude;    /* in Mv */
+    int planets;            /* known planets */
+
+    struct Star *next_ptr;
+} 
+STAR;

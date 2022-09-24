@@ -1,0 +1,24 @@
+Enter an integer for A: 1
+Enter an integer for A: 1
+A&&B: 1
+A||B: 1
+!(A||B): 0
+
+Enter an integer for A: 1
+Enter an integer for A: 0
+A&&B: 0
+A||B: 1
+!(A||B): 0
+
+Enter an integer for A: 0
+Enter an integer for A: 1
+A&&B: 0
+A||B: 1
+!(A||B): 0
+
+Enter an integer for A: 0
+Enter an integer for A: 0
+A&&B: 0
+A||B: 0
+!(A||B): 1
+

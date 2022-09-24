@@ -1,0 +1,34 @@
+Solar System - Sol|G|.0000158|1|4.85|8
+Alpha Centauri - Proxima Centauri|M|4.2465|.122|15.53|3
+Alpha Centauri - Rigil Kentaurus|G|4.3441|1.079|4.38|1
+Alpha Centauri - Toliman|K|4.3441|.909|5.71|1
+Barnard's Star|M|5.9629|.144|13.22|1
+Luhman 16 - A|L|6.5029|.032|14.2|1
+Luhman 16 - B|T|6.5029|.027|25.5|0
+Wise 0855 - 0714|Y|7.430|.007|25.3|0
+Wolf 359|M|7.8558|.09|16.55|2
+Lalande 21185|M|8.3044|.39|10.44|2
+Alpha Canis Majoris - Sirius|A|8.7094|2.063|1.42|0
+Alpha Canis Majoris - B|D|8.7094|1.018|11.34|0
+Luyten 726-8 - BL Ceti|M|8.724|.102|15.4|0
+Luyten 726-8 - UV Ceti|M|8.724|.1|15.85|0
+Ross 154|M|9.7063|.17|13.07|0
+Ross 248|M|9.7063|.136|14.79|0
+Ran|K|10.4749|.82|3.19|2
+Lacaille 9352|M|10.7241|.486|9.75|3
+Ross 128|M|11.0074|.168|13.51|1
+EZ Aquarii - A|M|11.109|.11|15.64|0
+EZ Aquarii - B|M|11.109|.11|15.58|0
+EZ Aquarii - C|M|11.109|.10|16.34|0
+Alpha Canis Minoris - Procyon|F|11.402|1.499|2.66|0
+Alpha Canis Minoris - B|D|11.402|.602|12.98|0
+61 Cygni - A|K|11.4039|.7|7.49|0
+61 Cygni - B|K|11.4039|.63|8.31|0
+Struve 2398 - A|M|11.4908|.334|11.16|0
+Struve 2398 - B|M|11.4908|.248|11.95|2
+Groombridge 34 - A|M|11.6191|.38|10.32|2
+Groombridge 34 - B|M|11.6191|.15|13.3|0
+DX Cancri|M|11.6797|.09|16.98|0
+Epsilon Indi - A|K|11.8670|.754|6.89|1
+Epsilon Indi - Ba|T|11.8670|.065|17.98|0
+Epsilon Indi - Bb|T|11.8670|.065|17.98|0
