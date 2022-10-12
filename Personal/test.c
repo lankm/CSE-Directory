@@ -3,7 +3,7 @@
 
 void printValue(int i, void* v)
 {
-    printf("%d: %d\n", i, *(int*)v);
+    printf("%d", *(int*)v);
 }
 
 int main()
@@ -20,5 +20,6 @@ int main()
     stackPushValue(&num2, &head);
     stackPushValue(&num3, &head);
 
-    forEachVal(&head, printValue);
+    forEachNode(&head, printNode, printValue);
+    freeList(&head, NULL);
 }

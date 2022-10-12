@@ -28,17 +28,7 @@ NODE* createNode(void* value)
 
 	return n;
 }
-/* frees the given node and value with the funciton pointer. i is not used */
-void freeNode(NODE* node, void (*fun_freeValue)(int, void*), int i)
-{
-    // if not null then free value
-    if(fun_freeValue != NULL)
-    {
-        fun_freeValue(i, node->value);
-    }
 
-    free(node);
-}
 /* node function. i is a index if applicable */
 void fun_node(NODE* node, void (*fun_value)(int, void*), int i)
 {
@@ -47,6 +37,27 @@ void fun_node(NODE* node, void (*fun_value)(int, void*), int i)
     {
         fun_value(i, node->value);
     }
+}
+/* node function. frees the given node and value with the funciton pointer. i is not used */
+void freeNode(NODE* node, void (*fun_freeValue)(int, void*), int i)
+{
+    // freeing value
+    fun_node(node, fun_freeValue, -1);
+
+    // freeing node
+    free(node);
+}
+/* node function. prints each value of a node */
+void printNode(NODE* node, void (*fun_value)(int, void*), int i)
+{
+    // printing the value given fun_value
+    printf("%2d: value: ", i);
+    fun_node(node, fun_value, i);
+
+    // printing node data
+    printf("\n     node: %p\n", node);
+    printf("     next: %p\n", node->next_ptr);
+    printf("     last: %p\n\n", node->last_ptr);
 }
 
 /* executes fun_ptr on each node without popping (head, node_function, value_function) */
