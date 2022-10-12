@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifndef DS
-#define DS
+#ifndef LL
+#define LL
 
 /* doubly linked list node */
 typedef struct node
@@ -18,7 +18,7 @@ typedef struct node
 	struct node *next_ptr;
 } NODE;
 
-/* returns a single node with the given value */
+/* Returns a single node with the given value */
 NODE* createNode(void* value)
 {
 	NODE *n = (NODE*) malloc(sizeof(NODE));
@@ -29,30 +29,28 @@ NODE* createNode(void* value)
 	return n;
 }
 
-/* node function. i is a index if applicable */
-void fun_node(NODE* node, void (*fun_value)(int, void*), int i)
+/* Node functions. Generic, freeing and printing. args defined by forEachNode */
+void node_fn_ptr(NODE* node, void (*value_fn_ptr)(int, void*), int i)
 {
     // if not null then free value
-    if(fun_value != NULL)
+    if(value_fn_ptr != NULL)
     {
-        fun_value(i, node->value);
+        value_fn_ptr(i, node->value);
     }
 }
-/* node function. frees the given node and value with the funciton pointer. i is not used */
-void freeNode(NODE* node, void (*fun_freeValue)(int, void*), int i)
+void freeNode(NODE* node, void (*value_fn_ptr)(int, void*), int i)
 {
     // freeing value
-    fun_node(node, fun_freeValue, -1);
+    node_fn_ptr(node, value_fn_ptr, -1);
 
     // freeing node
     free(node);
 }
-/* node function. prints each value of a node */
-void printNode(NODE* node, void (*fun_value)(int, void*), int i)
+void printNode(NODE* node, void (*value_fn_ptr)(int, void*), int i)
 {
     // printing the value given fun_value
     printf("%2d: value: ", i);
-    fun_node(node, fun_value, i);
+    node_fn_ptr(node, value_fn_ptr, i);
 
     // printing node data
     printf("\n     node: %p\n", node);
@@ -60,8 +58,8 @@ void printNode(NODE* node, void (*fun_value)(int, void*), int i)
     printf("     last: %p\n\n", node->last_ptr);
 }
 
-/* executes fun_ptr on each node without popping (head, node_function, value_function) */
-void forEachNode(NODE** head, void (*fun_node)(NODE*, void (*)(int, void*), int), void (*fun_value)(int, void*))
+/* Executes fun_ptr on each node without popping (head, node_fn_ptr, value_fn_ptr) */
+void forEachNode(NODE** head, void (*node_fn_ptr)(NODE*, void (*)(int, void*), int), void (*value_fn_ptr)(int, void*))
 {
     // if empty then do nothing
     if(*head == NULL);
@@ -77,7 +75,7 @@ void forEachNode(NODE** head, void (*fun_node)(NODE*, void (*)(int, void*), int)
         {
             // increment and execute function
             node = node->next_ptr;
-            fun_node(temp, fun_value, i);
+            node_fn_ptr(temp, value_fn_ptr, i);
             
             // resync temp
             temp = node;
@@ -86,20 +84,24 @@ void forEachNode(NODE** head, void (*fun_node)(NODE*, void (*)(int, void*), int)
         while(node != *head);
     }
 }
-void forEachVal(NODE** head, void (*fun_value)(int, void*))
+void forEachVal(NODE** head, void (*value_fn_ptr)(int, void*))
 {
-    forEachNode(head, fun_node, fun_value);
+    forEachNode(head, node_fn_ptr, value_fn_ptr);
 }
 
-/* frees the entire linked list */
-void freeList(NODE** head, void (*fun_freeValue)(int, void*))
+/* frees and printing LL */
+void freeList(NODE** head, void (*value_fn_ptr)(int, void*))
 {
-    forEachNode(head, freeNode, fun_freeValue);
+    forEachNode(head, freeNode, value_fn_ptr);
     *head = NULL;
+}
+void printList(NODE** head, void (*value_fn_ptr)(int, void*))
+{
+    forEachNode(head, printNode, value_fn_ptr);
 }
 
 /* adds a node to the tail */
-void queuePush(NODE* node, NODE** head)
+void enqueue(NODE* node, NODE** head)
 {
     // if empty
     if(*head == NULL)
@@ -124,25 +126,25 @@ void queuePush(NODE* node, NODE** head)
         tail->next_ptr = node;
     }
 }
-void queuePushValue(void* value, NODE** head)
+void enqueueValue(void* value, NODE** head)
 {
     NODE* node = createNode(value);
-    queuePush(node, head);
+    enqueue(node, head);
 }
 
 /* adds a node to the head */
-void stackPush(NODE* node, NODE** head)
+void push(NODE* node, NODE** head)
 {
     // common between stack and queue
-    queuePush(node, head);
+    enqueue(node, head);
 
     // repointing the head to the new node
     *head = node;
 }
-void stackPushValue(void* value, NODE** head)
+void pushValue(void* value, NODE** head)
 {
     NODE* node = createNode(value);
-    stackPush(node, head);
+    push(node, head);
 }
 
 /* peek and pop */

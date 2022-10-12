@@ -1,25 +1,26 @@
-#include "ds.h"
+#include "ll.h"
 #include <stdio.h>
 
 void printValue(int i, void* v)
 {
-    printf("%d", *(int*)v);
+    printf("%f", *(double*)v);
+}
+void freeValue() {
+    
 }
 
 int main()
 {
     NODE* head = NULL;
 
-    int num1 = 1;
-    int num2 = 2;
-    int num3 = 3;
+    double num1 = 1;
+    double num2 = 2;
+    double num3 = 3;
 
-    stackPushValue(&num1, &head);
-    stackPushValue(&num2, &head);
-    stackPushValue(&num3, &head);
-    stackPushValue(&num2, &head);
-    stackPushValue(&num3, &head);
+    pushValue(&num1, &head);
+    pushValue(&num2, &head);
+    pushValue(&num3, &head);
 
-    forEachNode(&head, printNode, printValue);
+    printList(&head, printValue);
     freeList(&head, NULL);
 }
