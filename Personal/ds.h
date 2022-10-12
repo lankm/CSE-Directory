@@ -39,9 +39,18 @@ void freeNode(NODE* node, void (*fun_freeValue)(void*))
 
     free(node);
 }
+/* function for a node with only the value function*/ //add index value that is passed in.
+void fun_node(NODE* node, void (*fun_value)(void*))
+{
+    // if not null then free value
+    if(fun_value != NULL)
+    {
+        fun_value(node->value);
+    }
+}
 
 /* executes fun_ptr on each node without popping */
-void forEachNode(NODE** head, void (*fun_ptr)(NODE*))
+void forEachNode(NODE** head, void (*fun_node)(NODE*, void (*)(void*)), void (*fun_value)(void*))
 {
     // if empty then do nothing
     if(*head == NULL);
@@ -56,7 +65,7 @@ void forEachNode(NODE** head, void (*fun_ptr)(NODE*))
         {
             // increment and execute function
             node = node->next_ptr;
-            fun_ptr(temp);//DEBUG THIS
+            fun_node(temp, fun_value);
             
             // resync temp
             temp = node;
@@ -64,15 +73,15 @@ void forEachNode(NODE** head, void (*fun_ptr)(NODE*))
         while(node != *head);
     }
 }
-void forEachVal(NODE** head, void (*fun_ptr)(void*))
+void forEachVal(NODE** head, void (*fun_value)(void*))
 {
-    
+    forEachNode(head, fun_node, fun_value);
 }
 
 /* frees the entire linked list */
 void freeList(NODE** head, void (*fun_freeValue)(void*))
 {
-    forEachNode(head, freeNode);//DEBUG THIS
+    forEachNode(head, freeNode, fun_freeValue);
     *head = NULL;
 }
 
@@ -164,7 +173,5 @@ void* pop(NODE** head, void (*fun_freeValue)(void*))
     printf("freed %p\n", node);
     return value;
 }
-
-
 
 #endif

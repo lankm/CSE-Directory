@@ -20,7 +20,9 @@ int main()
     stackPushValue(&num2, &head);
     stackPushValue(&num3, &head);
 
-    freeList(&head, fun_ptr);
+    forEachVal(&head, fun_ptr);
+
+    freeList(&head, NULL);
 
     if(head == NULL)
         printf("NULL\n");
