@@ -28,29 +28,29 @@ NODE* createNode(void* value)
 
 	return n;
 }
-/* frees the given node and value with the funciton pointer */
-void freeNode(NODE* node, void (*fun_freeValue)(void*))
+/* frees the given node and value with the funciton pointer. i is not used */
+void freeNode(NODE* node, void (*fun_freeValue)(int, void*), int i)
 {
     // if not null then free value
     if(fun_freeValue != NULL)
     {
-        fun_freeValue(node->value);
+        fun_freeValue(i, node->value);
     }
 
     free(node);
 }
-/* function for a node with only the value function*/ //add index value that is passed in.
-void fun_node(NODE* node, void (*fun_value)(void*))
+/* node function. i is a index if applicable */
+void fun_node(NODE* node, void (*fun_value)(int, void*), int i)
 {
     // if not null then free value
     if(fun_value != NULL)
     {
-        fun_value(node->value);
+        fun_value(i, node->value);
     }
 }
 
-/* executes fun_ptr on each node without popping */
-void forEachNode(NODE** head, void (*fun_node)(NODE*, void (*)(void*)), void (*fun_value)(void*))
+/* executes fun_ptr on each node without popping (head, node_function, value_function) */
+void forEachNode(NODE** head, void (*fun_node)(NODE*, void (*)(int, void*), int), void (*fun_value)(int, void*))
 {
     // if empty then do nothing
     if(*head == NULL);
@@ -61,25 +61,27 @@ void forEachNode(NODE** head, void (*fun_node)(NODE*, void (*)(void*)), void (*f
         NODE* temp = node;
 
         // loop until head is read
+        int i=0;
         do
         {
             // increment and execute function
             node = node->next_ptr;
-            fun_node(temp, fun_value);
+            fun_node(temp, fun_value, i);
             
             // resync temp
             temp = node;
+            i++;
         }
         while(node != *head);
     }
 }
-void forEachVal(NODE** head, void (*fun_value)(void*))
+void forEachVal(NODE** head, void (*fun_value)(int, void*))
 {
     forEachNode(head, fun_node, fun_value);
 }
 
 /* frees the entire linked list */
-void freeList(NODE** head, void (*fun_freeValue)(void*))
+void freeList(NODE** head, void (*fun_freeValue)(int, void*))
 {
     forEachNode(head, freeNode, fun_freeValue);
     *head = NULL;
@@ -132,7 +134,7 @@ void stackPushValue(void* value, NODE** head)
     stackPush(node, head);
 }
 
-/* views the head */
+/* peek and pop */
 void* peek(NODE* head)
 {
     // if empty
@@ -145,8 +147,7 @@ void* peek(NODE* head)
         return head->value;
     }
 }
-/* peeks and then pops */
-void* pop(NODE** head, void (*fun_freeValue)(void*))
+void* pop(NODE** head, void (*fun_freeValue)(int, void*))
 {
     // temp variables for swapping, freeing, and returning
     NODE* new_head = (*head)->next_ptr;
@@ -169,7 +170,7 @@ void* pop(NODE** head, void (*fun_freeValue)(void*))
     }
 
     // freeing and returning
-    freeNode(node, fun_freeValue);
+    freeNode(node, fun_freeValue, -1);
     printf("freed %p\n", node);
     return value;
 }

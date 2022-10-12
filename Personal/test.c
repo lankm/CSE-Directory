@@ -1,18 +1,18 @@
 #include "ds.h"
 #include <stdio.h>
 
-void fun_ptr(void* v)
+void printValue(int i, void* v)
 {
-    printf("%d\n", *(int*)v);
+    printf("%d: %d\n", i, *(int*)v);
 }
 
 int main()
 {
     NODE* head = NULL;
 
-    int num1 = 17;
-    int num2 = 12;
-    int num3 = 15;
+    int num1 = 1;
+    int num2 = 2;
+    int num3 = 3;
 
     stackPushValue(&num1, &head);
     stackPushValue(&num2, &head);
@@ -20,33 +20,5 @@ int main()
     stackPushValue(&num2, &head);
     stackPushValue(&num3, &head);
 
-    forEachVal(&head, fun_ptr);
-
-    freeList(&head, NULL);
-
-    if(head == NULL)
-        printf("NULL\n");
+    forEachVal(&head, printValue);
 }
-/*  // if empty then do nothing
-    if(*head == NULL);
-    else
-    {
-        // current and temp nodes
-        NODE* node = *head;
-        NODE* temp = node;
-
-        // loop until head is read
-        do
-        {
-            // free node and increment
-            node = node->next_ptr;
-            freeNode(temp, fun_freeValue);
-            
-            // resync temp
-            temp = node;
-        }
-        while(node != *head);
-
-        // set to null for safety reasons
-        *head = NULL;
-    } */
