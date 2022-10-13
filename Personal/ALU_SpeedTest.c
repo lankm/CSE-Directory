@@ -28,7 +28,7 @@ int main() {
 
     i=0;
     start = clock();
-    for(;i<LOOP_NUM; i++) {ib*=ia;}
+    for(;i<LOOP_NUM; i++) {ib/=ia;}
     end = clock();
     clock_t int_mul=end-start-baseline;
 
@@ -41,7 +41,7 @@ int main() {
 
     i=0;
     start = clock();
-    for(;i<LOOP_NUM; i++) {lb*=la;}
+    for(;i<LOOP_NUM; i++) {lb/=la;}
     end = clock();
     clock_t long_mul=end-start-baseline;
 
@@ -54,7 +54,7 @@ int main() {
 
     i=0;
     start = clock();
-    for(;i<LOOP_NUM; i++) {fb*=fa;}
+    for(;i<LOOP_NUM; i++) {fb/=fa;}
     end = clock();
     clock_t float_mul=end-start-baseline;
 
@@ -67,13 +67,13 @@ int main() {
 
     i=0;
     start = clock();
-    for(;i<LOOP_NUM; i++) {db*=da;}
+    for(;i<LOOP_NUM; i++) {db/=da;}
     end = clock();
     clock_t double_mul=end-start-baseline;
 
 
     
-    printf("%8s|%8s|%8s|\n","type","add/sub","mul/div");
+    printf("%8s|%8s|%8s|\n","type","add/sub","div");
     printf("%8s|%8d|%8d|\n","int32",int_add,int_mul);
     printf("%8s|%8d|%8d|\n","int64",long_add,long_mul);
     printf("%8s|%8d|%8d|\n","float",float_add,float_mul);
