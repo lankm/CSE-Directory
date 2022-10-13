@@ -1,26 +1,15 @@
 #include "ll.h"
+#include "da.h"
 #include <stdio.h>
-
-void printValue(int i, void* v)
-{
-    printf("%f", *(double*)v);
-}
-void freeValue() {
-    
-}
 
 int main()
 {
-    NODE* head = NULL;
+    ARRAY test;
+    test.arr = malloc(sizeof(int)*6);
+    test.size = 6;
+    test.data_size = sizeof(int);
 
-    double num1 = 1;
-    double num2 = 2;
-    double num3 = 3;
+    ((int*)test.arr)[0] = 2;
 
-    pushValue(&num1, &head);
-    pushValue(&num2, &head);
-    pushValue(&num3, &head);
-
-    printList(&head, printValue);
-    freeList(&head, NULL);
+    printf("%d", test.size);
 }

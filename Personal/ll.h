@@ -1,4 +1,4 @@
-/* This header file implements multiple types of data structures in c.
+/* This header file implements a doubly linked list and some useful functions
  *
  * Author: Landon Moon
  */
