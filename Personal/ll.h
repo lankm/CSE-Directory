@@ -1,6 +1,7 @@
 /* This header file implements a doubly linked list and some useful functions
  *
  * Author: Landon Moon
+ * Complete
  */
 
 #include <stdlib.h>

@@ -1,6 +1,7 @@
 /* This header file implements a dynamic array
  *
  * Author: Landon Moon
+ * In progress
  */
 
 #include <stdlib.h>
