@@ -6,6 +6,8 @@
  * 
  * Honestly this should be in assembly.
  *
+
+    //*(uint64_t*)(&num.f) = 0x888880000000llu; purposly leaking into num.i
  * Author: Landon Moon
  * In progress
  */
@@ -18,78 +20,103 @@
 #ifndef FIXED64
 #define FIXED64
 
-typedef struct fix64 
+#define FIX64_MAX_STR_LENGTH 31
+
+typedef struct __attribute__((packed)) fix64 
 {
-    int64_t integer;
-    uint32_t decimal;
+    // f then i because x86 is little-endian
+
+    uint32_t : 32; // 4 unused bytes
+    uint32_t f; // used as pointer to beginning of bits
+    int64_t i;  // used as pointer to integer section
 } FIX64;
 
-/* works but needs a major cleanup */
-FIX64 convert(char* str)
+FIX64 negate(FIX64 *num)
 {
-    char* dec_str = strchr(str, '.');
-    double dec = atof(dec_str);
-
-
-    FIX64 num;
-    num.integer = atoll(str);
-    if(str[0]=='-')
-        num.integer = atoll(str+1);
-    num.decimal = (uint32_t)(dec*(1<<16)*(1<<16));
-
-    if(str[0]=='-')
+    // negative handling
+    num->i = ~num->i;
+    num->f = ~num->f+1;
+    // if overflow
+    if(!num->f)
     {
-        num.integer = ~num.integer;
-        num.decimal = ~num.decimal+1;
-        if(num.decimal == 0)
-            num.integer++;
+        num->i++;
     }
 
+    return *num;
+}
+
+/* Converts a string to FIX64 */
+FIX64 convert(char *str)
+{   
+    // declaring return variable
+    FIX64 num;
+
+    // retrieving decimal bits
+    char* point = strchr(str, '.');
+    double dec = atof(point);
+    num.f = (uint32_t)(dec*(1<<16)*(1<<16));
+
+    // if negative
+    if(str[0] == '-')
+    {
+        // retrieving integer bits. skip '-'
+        num.i = atoll(++str);
+
+        // negative handling
+        negate(&num);
+    }
+    else
+    {
+        // retrieving integer bits
+        num.i = atoll(str);
+    }
+
+    printf("f: %p i: %p\n", &num.f, &num.i);     // print address values
+    printf("num: %016llx.%08x\n", num.i, num.f); // print bit values
+    
     return num;
 }
-/* works but needs a major cleanup */
-void printFix64(FIX64 num) {
-    uint32_t decf = num.decimal;
-    int64_t in = num.integer;
-    char c = '+';
-    if(num.integer < 0)
+/* Prints a FIX64. Change to not print and return string */
+char* toString(char *str, FIX64 num)
+{
+    // copying
+    FIX64 copy = num;
+
+    // if negative
+    if(copy.i < 0)
     {
-        decf = ~num.decimal+1;
-        in = ~num.integer;
-        c='-';
-        if(num.decimal == 0)
-            in++;
+        // negative handling
+        negate(&copy);
+        printf("-");
     }
-    double dec = ((double)(decf))/(1<<16)/(1<<16);
 
-    char strBuff[32];
+    // edge handling
+    if(copy.f >= UINT32_MAX-1)
+    {
+        copy.f = UINT32_MAX-2;
+    }
+    // retrieving decimal value
+    double dec = ((double)(copy.f))/(1<<16)/(1<<16);
+    
+    // string handling
+    char strBuff[11];
     sprintf(strBuff, "%.9lf", dec);
+    sprintf(str, "%lld%s\n", copy.i, strBuff+1);
 
-    printf("num: %016llx.%08x (%c%lld%s)\n", num.integer, num.decimal, c, in, strBuff+1);
+    return str;
 }
 
 FIX64 add(FIX64 a, FIX64 b)
 {
-    int64_t val = (int64_t)a.decimal + (int64_t)b.decimal;
-
-    FIX64 fix;
-    fix.decimal = (uint32_t)val;
-    fix.integer = a.integer + b.integer + (val>>32);
-
-    return fix;
+    
+}
+FIX64 sub(FIX64 a, FIX64 b)
+{
+    
 }
 FIX64 mul(FIX64 a, FIX64 b)
 {
-    FIX64 num;
-    int64_t dec = ((int64_t)a.decimal * (int64_t)b.decimal)>>32;
-    int64_t cross1 = a.decimal*b.integer;
-    int64_t cross2 = b.decimal*a.integer;
-    int64_t in = a.integer*b.integer;
-
-    num.decimal = (int32_t)dec + (int32_t)cross1 + (int32_t)cross2;
-    num.integer = in + (cross1>>32) + (cross2>>32);
-
-    return num;
+    
 }
 
 

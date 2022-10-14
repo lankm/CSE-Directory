@@ -1,16 +1,13 @@
-#include "ll.h"
-#include "da.h"
 #include "fixed64.h"
 #include <stdio.h>
 
 int main()
 {
-    printf("size: %d\n", sizeof(FIX64));
+    char *max = "-9223372036854775807.9999999996";
+    char *val = "-2014242342423424000.1312333755";
+    FIX64 num1 = convert(val);
+    
+    char *str = malloc(FIX64_MAX_STR_LENGTH);
+    printf("%s", toString(str, num1));
 
-    char *str1 = "-1.25", *str2 = "1.00000001";
-    FIX64 num1 = convert(str1), num2 = convert(str2);
-    printFix64(num1);
-    printFix64(num2);
-
-    printFix64(mul(num1, num2));
 }
