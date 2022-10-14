@@ -1,15 +1,14 @@
 /* This header file implements a fixed point uint32_t.
  * The overflow of this number is put into a int64_t.
- * 
- * The purpose of this implemtation is to be take advantage of a couple
- * coincidences: 2^30 ~= 10^9, and cpus are usually 64bit so 32b*32b->64b.
+ *
+ * pointer conversion is used to implement operations faster.
+ * *(uint64_t*)(&num.f)
  * 
  * Honestly this should be in assembly.
  *
-
-    //*(uint64_t*)(&num.f) = 0x888880000000llu; purposly leaking into num.i
  * Author: Landon Moon
  * In progress
+ * 
  */
 
 #include <stdlib.h>
@@ -54,7 +53,7 @@ FIX64 convert(char *str)
     // retrieving decimal bits
     char* point = strchr(str, '.');
     double dec = atof(point);
-    num.f = (uint32_t)(dec*(1<<16)*(1<<16));
+    num.f = (uint32_t)(dec*(1<<16)*(1<<16));    // err: small rounding mistake
 
     // if negative
     if(str[0] == '-')
@@ -71,8 +70,8 @@ FIX64 convert(char *str)
         num.i = atoll(str);
     }
 
-    printf("f: %p i: %p\n", &num.f, &num.i);     // print address values
-    printf("num: %016llx.%08x\n", num.i, num.f); // print bit values
+    //printf("f: %p i: %p\n", &num.f, &num.i);     // print address values
+    //printf("num: %016llx.%08x\n", num.i, num.f); // print bit values
     
     return num;
 }
@@ -108,11 +107,23 @@ char* toString(char *str, FIX64 num)
 
 FIX64 add(FIX64 a, FIX64 b)
 {
-    
+    // declaring return variable
+    FIX64 num;
+    num.i=0;
+
+    // adding decimal component
+    *(uint64_t*)(&num.f) = (uint64_t)b.f + (uint64_t)a.f; // purposly leaking overflow bit into num.i
+
+    // adding integer component
+    num.i += b.i + a.i;
+
+    return num;
 }
 FIX64 sub(FIX64 a, FIX64 b)
 {
-    
+    // implement propperly later
+    FIX64 copy = b;
+    return add(a, negate(&copy));
 }
 FIX64 mul(FIX64 a, FIX64 b)
 {
