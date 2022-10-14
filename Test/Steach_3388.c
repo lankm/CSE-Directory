@@ -2,7 +2,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/types.h>
-#include <sys/wait.h>
 #include <unistd.h>
 #include <errno.h>
 #include <math.h>
@@ -42,8 +41,6 @@ void bubbleSort(long *values, int x, char text[][30]){
 		}
 	}
 }
-
-
 
 void sortNormal()
 {
@@ -100,9 +97,6 @@ void sortNormal()
 	fclose(file);
 }
 //////end of functions related to sorting without forks and stuff
-
-
-
 
 void Merge(char (*text)[30], long *array, int a1, int a2, int sizeA, int sizeB, int fileSize){//a1 and a2 are the start of each subarray that is getting merged
 	long count1 = array[a1];	//holds the next value for one of the split arrays
@@ -198,7 +192,6 @@ void MergeAllFiles(char (*text)[30],long *values, int numOfForks, int sizeOfSubA
 			Merge(text,values,arrayHead, (fileSize - oddArraySize), (fileSize - oddArraySize), oddArraySize, fileSize);
 	}
 }
-
 
 void *threadBubbleSort(void *_args){
 	long temp;
@@ -435,6 +428,4 @@ int main(int argc, char* argv[])
 	
 	return 0;
 }
-
-
 
