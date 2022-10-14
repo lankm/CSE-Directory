@@ -5,7 +5,6 @@
  * coincidences: 2^30 ~= 10^9, and cpus are usually 64bit so 32b*32b->64b.
  * 
  * Honestly this should be in assembly.
- * currently implemented with uint32_t having offset 32, not 30(planned).
  *
  * Author: Landon Moon
  * In progress
@@ -21,47 +20,76 @@
 
 typedef struct fix64 
 {
-    uint32_t decimal;
     int64_t integer;
+    uint32_t decimal;
 } FIX64;
 
-/* parses a string into FIX64 format */
+/* works but needs a major cleanup */
 FIX64 convert(char* str)
 {
     char* dec_str = strchr(str, '.');
     double dec = atof(dec_str);
 
-    FIX64 fix;
-    fix.integer = atoll(str);
-    fix.decimal = (uint32_t)(dec*(1<<16)*(1<<16)); //doesnt implement use for first 2 bits
-    printf("fix.decimal: %08x\n", fix.decimal);
 
-    return fix;
+    FIX64 num;
+    num.integer = atoll(str);
+    if(str[0]=='-')
+        num.integer = atoll(str+1);
+    num.decimal = (uint32_t)(dec*(1<<16)*(1<<16));
+
+    if(str[0]=='-')
+    {
+        num.integer = ~num.integer;
+        num.decimal = ~num.decimal+1;
+        if(num.decimal == 0)
+            num.integer++;
+    }
+
+    return num;
 }
+/* works but needs a major cleanup */
 void printFix64(FIX64 num) {
-    double dec = ((double)(num.decimal))/(1<<16)/(1<<16);
-    printf("%lld %.9lf\n", num.integer, dec);
+    uint32_t decf = num.decimal;
+    int64_t in = num.integer;
+    char c = '+';
+    if(num.integer < 0)
+    {
+        decf = ~num.decimal+1;
+        in = ~num.integer;
+        c='-';
+        if(num.decimal == 0)
+            in++;
+    }
+    double dec = ((double)(decf))/(1<<16)/(1<<16);
+
+    char strBuff[32];
+    sprintf(strBuff, "%.9lf", dec);
+
+    printf("num: %016llx.%08x (%c%lld%s)\n", num.integer, num.decimal, c, in, strBuff+1);
 }
 
-// only works for positive numbers rn
 FIX64 add(FIX64 a, FIX64 b)
 {
     int64_t val = (int64_t)a.decimal + (int64_t)b.decimal;
 
     FIX64 fix;
-    fix.decimal = (int32_t)val;
+    fix.decimal = (uint32_t)val;
     fix.integer = a.integer + b.integer + (val>>32);
 
     return fix;
 }
 FIX64 mul(FIX64 a, FIX64 b)
 {
-    FIX64 fix;//debug this
-    int64_t val = (int64_t)a.decimal * (int64_t)b.decimal;
-    fix.decimal = (int32_t)(val>>32) + (int64_t)a.decimal*;
-    fix.integer = a.integer * b.integer + (val>>63);
+    FIX64 num;
+    int64_t dec = ((int64_t)a.decimal * (int64_t)b.decimal)>>32;
+    int64_t cross1 = a.decimal*b.integer;
+    int64_t cross2 = b.decimal*a.integer;
+    int64_t in = a.integer*b.integer;
 
-    return fix;
+    num.decimal = (int32_t)dec + (int32_t)cross1 + (int32_t)cross2;
+    num.integer = in + (cross1>>32) + (cross2>>32);
+
+    return num;
 }
 
 
