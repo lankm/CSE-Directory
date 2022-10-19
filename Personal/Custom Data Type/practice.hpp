@@ -17,6 +17,10 @@
 #include <stdint.h>
 #include <string.h>
 
+#include <string>
+#include <iostream>
+#include <format>
+
 using namespace std;
 
 class Number
@@ -57,8 +61,9 @@ class Number
             printf("adr: %p i: %p\n", &f, &i); // print address values
             printf("num: %d %08lx.%08x\n", n, i, f); // print bit values
         }
-        char* toString(char *str)
+        string toString()
         {
+
             // if negative
             char c = '+';
             if(n)
@@ -69,12 +74,7 @@ class Number
             // retrieving decimal value
             double dec = ((double)(f))/(1<<16)/(1<<16);
     
-            // string handling
-            char strBuff[11];
-            sprintf(strBuff, "%.9lf", dec);
-            sprintf(str, "%c%lld%s\n", c, i, strBuff+1);
-
-            return str;
+            return format("%c%ld.%9lf\n", c, i, dec);
         }
         Number operator +(const Number num)
         {
