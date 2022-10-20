@@ -1,7 +1,5 @@
-#include "practice.hpp"
+#include "bigint.hpp"
 
 int main() {
-    Number n = Number("5");
-
-    cout << n.toString();
+    BigInt n = BigInt("50000000");
 }

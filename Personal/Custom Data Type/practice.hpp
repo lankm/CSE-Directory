@@ -19,7 +19,6 @@
 
 #include <string>
 #include <iostream>
-#include <format>
 
 using namespace std;
 
@@ -74,7 +73,7 @@ class Number
             // retrieving decimal value
             double dec = ((double)(f))/(1<<16)/(1<<16);
     
-            return format("%c%ld.%9lf\n", c, i, dec);
+            return NULL;
         }
         Number operator +(const Number num)
         {
