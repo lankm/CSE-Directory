@@ -14,18 +14,18 @@ using namespace std;
 class BigInt
 {
     private:
-        uint32_t *i;
+        uint64_t *i;
         uint32_t size;
     public:
         BigInt() {
             BigInt(1);
         }
         BigInt(int size) {
-            i = (uint32_t*)calloc(size, sizeof(uint32_t));
+            i = (uint64_t*)calloc(size, sizeof(uint64_t));
         }
         BigInt(const char *str) {
             BigInt(1);
-            *i = atoi(str);
+            *i = atoll(str);
 
             printf("%lld\n", *i);
         }
@@ -33,9 +33,10 @@ class BigInt
             free(i);
         }
         void resize(int size) {
-            
+            this->size = size;
+            realloc(i, size * sizeof(uint64_t));
         }
-        string toString() { //replace with << overload
+        string operator <<(const BigInt num) {
             return "Not implemented";
         }
         BigInt operator +(const BigInt num) {
